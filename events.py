@@ -41,13 +41,15 @@ class Menu_page(tk.Frame):
 
 class Event_page(tk.Frame):
 
+
 	def add_event(self):
-		self.ename = self.name_text.get("1.0","end-1c")
-		self.eprice=self.price_text.get("1.0","end-1c")
-		print(self.ename, self.eprice)
-		with open('events.csv','a',newline="") as f:
-			wr=csv.writer(f, dialect='excel')
-			wr.writerow([self.ename,self.eprice])
+			self.ename = self.name_text.get("1.0","end-1c")
+			self.eprice=self.price_text.get("1.0","end-1c")
+			print(self.ename, self.eprice)
+			with open('events.csv','a',newline="") as f:
+				wr=csv.writer(f, dialect='excel')
+				wr.writerow([self.ename,self.eprice])
+
 
 	
 
@@ -72,7 +74,6 @@ class Event_page(tk.Frame):
 		#print(self.ename, self.eprice)
 
 		
-
 		
 
 
@@ -87,22 +88,29 @@ class Add_participants_page(tk.Frame):
 		tk.Frame.__init__(self, parent)
 		self.controller = controller
 		#Add code here for Add Participant Frame
-		participant_name = tk.Label(self,text = "Participant Name")
-		college_name = tk.Label(self, text = "College name")
-		participant_name_text = tk.Entry(self)
-		college_name_text = tk.Entry(self)
-		participant_name.grid(row =0, column =0,padx=10, pady =10)
-		participant_name_text .grid(row = 0, column =1, columnspan =2,padx=10, pady =10)
-		college_name.grid(row =1, column =0, padx=10, pady =10) 
-		college_name_text.grid(row =1, column =1,columnspan =2,padx=10, pady =10)
-		back = tk.Button(self, text="Back",command=lambda: controller.show_frame("Menu_page"), padx=10, pady =10)
-		back.grid(row=2,column = 2,padx=10, pady =10)
-
+		self.participant_name = tk.Label(self,text = "Participant Name")
+		self.college_name = tk.Label(self, text = "College name")
+		self.participant_name_text = tk.Text(self, height=1, width=30)
+		self.college_name_text = tk.Text(self, height=1, width=30)
+		self.participant_name.grid(row =0, column =0,padx=10, pady =10)
+		self.participant_name_text .grid(row = 0, column =1, columnspan =2,padx=10, pady =10)
+		self.college_name.grid(row =1, column =0, padx=10, pady =10) 
+		self.college_name_text.grid(row =1, column =1,columnspan =2,padx=10, pady =10)
+		self.back = tk.Button(self, text="Back",command=lambda: controller.show_frame("Menu_page"), padx=10, pady =10)
+		self.back.grid(row=2,column = 2,padx=10, pady =10)
+		self.submit = tk.Button(self, text = "Submit", command =self.add_participant).grid(row=2, column=0)
 
 
 	def add_participant(self):
-		pass
+		
 		# Add code for adding event to participants.csv
+		self.ename = self.participant_name_text.get("1.0","end-1c")
+		self.eprice=self.college_name_text.get("1.0","end-1c")
+		print(self.ename, self.eprice)
+		with open('participants.csv','a',newline="") as f:
+			wr=csv.writer(f, dialect='excel')
+			wr.writerow([self.ename,self.eprice])
+
 
 
 class See_participants_page(tk.Frame):
@@ -111,14 +119,21 @@ class See_participants_page(tk.Frame):
 		tk.Frame.__init__(self, parent)
 		self.controller = controller
 		#Add code here for View Paricipant Frame
-		m = tk.Text(self,width=20,height=10)
-		back = tk.Button(self, text="Back",command=lambda: controller.show_frame("Menu_page"))
-		m.grid(padx=10, pady =10)
-		back.grid(padx=10, pady =10)
+		self.m = tk.Text(self,width=20,height=10)
+		self.back = tk.Button(self, text="Back",command=lambda: controller.show_frame("Menu_page"))
+		self.view = tk.Button(self, text = " View", command =self.view_participant).grid()
+		self.m.grid(padx=10, pady =10)
+		self.back.grid(padx=10, pady =10)
 
 	def view_participant(self):
-		pass
-		# Add code for displaying from participants.csv
+		with open("participants.csv","r") as myfile:
+
+			rd=csv.reader(myfile)
+			for line in rd :
+				print(f"{line[0]} - {line[1]}")
+				self.m.insert("0.0",f"{line[0]},{line[1]} \n")
+
+		
 if __name__ =="__main__":
 	a = EventManagement()
 	a.mainloop()
